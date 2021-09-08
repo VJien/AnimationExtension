@@ -23,6 +23,11 @@ FText UAnimGraphNode_OrientationWarping::GetTooltipText() const
 	return LOCTEXT("OrientationWarpingTooltip", "Orients RootBone to match locomotion direction, and counter rotates spine.");
 }
 
+FLinearColor UAnimGraphNode_OrientationWarping::GetNodeTitleColor() const
+{
+	return FLinearColor(1.0f, 0.0f, 0.75f);
+}
+
 FText UAnimGraphNode_OrientationWarping::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
 	return GetControllerDescription();

@@ -20,6 +20,7 @@ public:
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 	virtual FText GetTooltipText() const override;
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
+	virtual FLinearColor GetNodeTitleColor() const override;
 	// End of UEdGraphNode interface
 
 protected:

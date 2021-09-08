@@ -19,6 +19,11 @@ FText UAnimGraphNode_SlopeWarping::GetTooltipText() const
 	return LOCTEXT("SlopeWarpingTooltip", "Adjust Feet IK to Match Floor Normal");
 }
 
+FLinearColor UAnimGraphNode_SlopeWarping::GetNodeTitleColor() const
+{
+	return FLinearColor(1.0f, 0.0f, 0.75f);
+}
+
 FText UAnimGraphNode_SlopeWarping::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
 	return GetControllerDescription();

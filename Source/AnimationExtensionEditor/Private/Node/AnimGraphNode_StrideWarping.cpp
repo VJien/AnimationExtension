@@ -60,4 +60,9 @@ void UAnimGraphNode_StrideWarping::PostEditChangeProperty(struct FPropertyChange
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 
+FLinearColor UAnimGraphNode_StrideWarping::GetNodeTitleColor() const
+{
+	return FLinearColor(1.0f, 0.0f, 0.75f);
+}
+
 #undef LOCTEXT_NAMESPACE
