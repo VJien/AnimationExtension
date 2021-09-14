@@ -90,6 +90,11 @@ void FAnimNode_StrideWarping::EvaluateSkeletalControl_AnyThread(FComponentSpaceP
 
 	check(OutBoneTransforms.Num() == 0);
 	const FBoneContainer& RequiredBones = Output.Pose.GetPose().GetBoneContainer();
+	
+	if (StrideScaling == 1.0f)
+	{
+		return;
+	}
 
 	FTransform IKFootRootTransform = Output.Pose.GetComponentSpaceTransform(IKFootRootBone.GetCompactPoseIndex(RequiredBones));
 	FVector StrideWarpingPlaneNormal = GetAxisModeValue(StrideWarpingAxisMode, IKFootRootTransform, ManualStrideWarpingDir);
@@ -231,9 +236,9 @@ void FAnimNode_StrideWarping::EvaluateSkeletalControl_AnyThread(FComponentSpaceP
 		if (bShowDebug)
 		{
 			// Draw Adjustments in Pelvis location
-			MyAnimInstanceProxy->AnimDrawDebugSphere(MyAnimInstanceProxy->GetComponentTransform().TransformPosition(InitialPelvisLocation), 3.f, 16, FColor::Red);
-			MyAnimInstanceProxy->AnimDrawDebugSphere(MyAnimInstanceProxy->GetComponentTransform().TransformPosition(AdjustedPelvisLocation), 5.f, 16, FColor::Green);
-			MyAnimInstanceProxy->AnimDrawDebugSphere(MyAnimInstanceProxy->GetComponentTransform().TransformPosition(SmoothAdjustedPelvisLocation), 7.f, 16, FColor::Blue);
+			MyAnimInstanceProxy->AnimDrawDebugSphere(MyAnimInstanceProxy->GetComponentTransform().TransformPosition(InitialPelvisLocation), 15.f, 16, FColor::Red);
+			MyAnimInstanceProxy->AnimDrawDebugSphere(MyAnimInstanceProxy->GetComponentTransform().TransformPosition(AdjustedPelvisLocation), 20.f, 16, FColor::Green);
+			MyAnimInstanceProxy->AnimDrawDebugSphere(MyAnimInstanceProxy->GetComponentTransform().TransformPosition(SmoothAdjustedPelvisLocation), 30.f, 16, FColor::Blue);
 
 			// Draw Stride Direction
 			MyAnimInstanceProxy->AnimDrawDebugDirectionalArrow(

@@ -5,7 +5,16 @@
 #include "AnimExtensionBlueprintLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
+#include "Animation/AnimInstanceProxy.h"
 
+
+#if ENABLE_ANIM_DEBUG
+TAutoConsoleVariable<int32> CVarDistanceMatchingDebug(TEXT("a.DistanceMatching.Debug"), 0, TEXT("Turn on debug for DistanceMatching"));
+#endif
+
+TAutoConsoleVariable<int32> CVarDistanceMatchinEnable(TEXT("a.DistanceMatching.Enable"), 1, TEXT("Toggle DistanceMatching"));
+
+DECLARE_CYCLE_STAT(TEXT("DistanceMatching Eval"), STAT_DistanceMatching_Eval, STATGROUP_Anim);
 
 void UAnimExtensionAnimInstance::NativeInitializeAnimation()
 {
@@ -17,9 +26,12 @@ void UAnimExtensionAnimInstance::NativeUpdateAnimation(float DeltaTimeX)
 {
 	//Very Important Line
 	Super::NativeUpdateAnimation(DeltaTimeX);
-
-	UpdateDistanceMatching(DeltaTimeX);
-	EvalDistanceMatching(DeltaTimeX);
+	if (bEnableDistanceMatching)
+	{
+		UpdateDistanceMatching(DeltaTimeX);
+		EvalDistanceMatching(DeltaTimeX);
+	}
+	
 }
 
 void UAnimExtensionAnimInstance::UpdateDistanceMatching(float DeltaTimeX)
@@ -62,7 +74,14 @@ void UAnimExtensionAnimInstance::UpdateDistanceMatching(float DeltaTimeX)
 			CharacterMovement->GetMaxBrakingDeceleration(),
 			CharacterMovement->MaxSimulationTimeStep,
 			100);
+
+		if (CVarDistanceMatchingDebug.GetValueOnAnyThread() == 1)
+		{
+			this->AnimInstanceProxy->AnimDrawDebugSphere(DistanceMachingLocation, 20.f, 12, FColor::Green, false, 2.0f, 1.0f);
+		}
 	}
+
+
 }
 
 void UAnimExtensionAnimInstance::EvalDistanceMatching(float DeltaTimeX)
@@ -90,6 +109,7 @@ void UAnimExtensionAnimInstance::EvalDistanceMatching(float DeltaTimeX)
 		Target = &JogDistanceCurveStopTime;
 	}
 
+
 	if (Time > *Target)
 	{
 		*Target = Time;
@@ -97,5 +117,11 @@ void UAnimExtensionAnimInstance::EvalDistanceMatching(float DeltaTimeX)
 	else
 	{
 		*Target += DeltaTimeX;
+	}
+
+	if (CVarDistanceMatchingDebug.GetValueOnAnyThread() == 1)
+	{
+		this->AnimInstanceProxy->AnimDrawDebugDirectionalArrow(Pawn->GetActorLocation(), DistanceMachingLocation, 1.0f, FColor::Green, false, 0.05f, 0.5f);
+
 	}
 }

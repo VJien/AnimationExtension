@@ -14,6 +14,9 @@ class ANIMATIONEXTENSIONRUNTIME_API UAnimExtensionAnimInstance : public UAnimIns
 {
 	GENERATED_BODY()
 public:
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly,  Category = Animation)
+		bool bEnableDistanceMatching = false;
+
 	UPROPERTY(BlueprintReadOnly, Category = Animation)
 		bool IsAccelerating = false;
 
