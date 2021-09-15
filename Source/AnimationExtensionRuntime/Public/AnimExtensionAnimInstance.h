@@ -14,10 +14,22 @@ class ANIMATIONEXTENSIONRUNTIME_API UAnimExtensionAnimInstance : public UAnimIns
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly,  Category = Animation)
+	virtual void NativeInitializeAnimation() override;
+	virtual void NativeUpdateAnimation(float DeltaTimeX) override;
+protected:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = AnimationExtension)
+		void UpdateAim(float DeltaTimeX);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = AnimationExtension)
+		void UpdateActorLean(float DeltaTimeX);
+private:
+	void UpdateDistanceMatching(float DeltaTimeX);
+	void EvalDistanceMatching(float DeltaTimeX);
+
+public:
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = Animation)
 		bool bEnableDistanceMatching = false;
 
-	UPROPERTY(BlueprintReadOnly, Category = Animation)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Animation)
 		bool IsAccelerating = false;
 
 	UPROPERTY(BlueprintReadOnly, Category = Animation)
@@ -29,16 +41,21 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = Animation)
 		FVector DistanceMachingLocation;
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Animation)
+		float AimYaw = 0.0f;
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Animation)
+		float AimPitch = 0.0f;
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Animation)
+		float YawDelta = 0.0f;
+
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 		UAnimSequence* JogStartAnimSequence = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 		UAnimSequence* JogStopAnimSequence = nullptr;
-public:
-	virtual void NativeInitializeAnimation() override;
-	virtual void NativeUpdateAnimation(float DeltaTimeX) override;
 private:
-	void UpdateDistanceMatching(float DeltaTimeX);
-	void EvalDistanceMatching(float DeltaTimeX);
+	FRotator RotationLastTick;
 };
 

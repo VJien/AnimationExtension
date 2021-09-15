@@ -34,6 +34,44 @@ void UAnimExtensionAnimInstance::NativeUpdateAnimation(float DeltaTimeX)
 	
 }
 
+void UAnimExtensionAnimInstance::UpdateAim_Implementation(float DeltaTimeX)
+{
+	APawn* Pawn = TryGetPawnOwner();
+	if (!Pawn)
+		return;
+
+	ACharacter* Character = Cast<ACharacter>(Pawn);
+	if (!ensure(Character))
+		return;
+
+	USkeletalMeshComponent* Mesh = Character->GetMesh();
+	if (!ensure(Mesh))
+		return;
+
+	FRotator BaseAimRotation = Pawn->GetBaseAimRotation(); // Camera Rotation
+	FRotator MeshRotation = Mesh->GetComponentRotation() - Character->GetBaseRotationOffsetRotator();
+	FRotator Delta = BaseAimRotation - MeshRotation;
+	Delta.Normalize();
+	AimYaw = Delta.Yaw;
+	AimPitch = Delta.Pitch;
+}
+
+
+
+void UAnimExtensionAnimInstance::UpdateActorLean_Implementation(float DeltaTimeX)
+{
+	APawn* Pawn = TryGetPawnOwner();
+	if (!Pawn)
+		return;
+
+	FRotator ActorRotation = Pawn->GetActorRotation();
+	float Delta = FMath::FindDeltaAngleDegrees(ActorRotation.Yaw, RotationLastTick.Yaw);
+	YawDelta = FMath::FInterpTo(YawDelta, Delta / DeltaTimeX, DeltaTimeX, 6);
+	//InverseYawDelta = -YawDelta;
+
+	RotationLastTick = ActorRotation;
+}
+
 void UAnimExtensionAnimInstance::UpdateDistanceMatching(float DeltaTimeX)
 {
 	APawn* Pawn = TryGetPawnOwner();
