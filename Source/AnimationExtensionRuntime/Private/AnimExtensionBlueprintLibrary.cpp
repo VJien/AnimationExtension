@@ -3,6 +3,7 @@
 
 #include "AnimExtensionBlueprintLibrary.h"
 
+PRAGMA_DISABLE_OPTIMIZATION
 bool UAnimExtensionBlueprintLibrary::PredictStopLocation(FVector& OutStopLocation, const FVector& CurrentLocation, const FVector& Velocity,
 	const FVector& Acceleration, float Friction, float BrakingDeceleration, const float TimeStep, const int MaxSimulationIterations /*= 10*/)
 {
@@ -108,6 +109,10 @@ bool UAnimExtensionBlueprintLibrary::PredictStopLocation(FVector& OutStopLocatio
 
 float UAnimExtensionBlueprintLibrary::GetDistanceCurveTime(UAnimSequence* Sequence, float Distance, FName DistanceCurveName/* = "DistanceCurve"*/)
 {
+		if (!Sequence)
+		{
+			return 0;
+		}
 		FRawCurveTracks CurvesOfAnim = Sequence->GetCurveData();
 		TArray<FFloatCurve> Curves = CurvesOfAnim.FloatCurves;
 
@@ -138,3 +143,5 @@ float UAnimExtensionBlueprintLibrary::GetDistanceCurveTime(UAnimSequence* Sequen
 
 		return 0;
 };
+
+PRAGMA_ENABLE_OPTIMIZATION
